@@ -13,3 +13,5 @@ Features
 - Dark mode and locale-aware number/date formatting.
 
 - Create and restore backups for data export and recovery.
+
+Avalaible for Android 7+.
