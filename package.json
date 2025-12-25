@@ -1,18 +1,38 @@
 {
   "name": "financial-books",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-documents/picker": "^11.0.3",
+    "@react-native-picker/picker": "2.11.1",
+    "color": "^5.0.3",
     "expo": "~54.0.27",
+    "expo-constants": "~18.0.11",
+    "expo-dev-client": "~6.0.20",
+    "expo-linking": "~8.0.10",
+    "expo-router": "~6.0.17",
+    "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
-    "react-native": "0.81.5"
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-date-picker": "^5.0.13",
+    "react-native-element-dropdown": "^2.12.4",
+    "react-native-file-access": "^3.2.0",
+    "react-native-get-random-values": "^2.0.0",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "uuid": "^13.0.0"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@react-native-community/cli": "^20.0.2",
+    "@react-native/metro-config": "^0.83.0"
+  }
 }
