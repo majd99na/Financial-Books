@@ -1,4 +1,3 @@
-Financial Books
 Financial Books is a lightweight React Native personal finance tracker with multi-account support, full CRUD, SQLite persistence, and user preferences for theme and formatting.
 
 Features
