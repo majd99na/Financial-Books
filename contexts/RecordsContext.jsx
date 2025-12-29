@@ -100,16 +100,24 @@ export const RecordsContextProvider = ({ children }) => {
         "INSERT INTO records (id,title,price,date,accountId) VALUES (?,?,?,?,?);",
         [randomId, data.title, data.price, data.date, data.selectedAccount]
       );
-      setRecords((prev) => [
-        ...prev,
-        {
+      setRecords((prev) => {
+        const newItem = {
           id: randomId,
           title: data.title,
           price: data.price,
           date: data.date,
           accountId: data.selectedAccount,
-        },
-      ]);
+        };
+        const newArr = [...prev];
+        const index = newArr.findIndex(
+          (item) => new Date(newItem.date) < new Date(item.date)
+        );
+        if (index === -1) newArr.push(newItem);
+        else {
+          newArr.splice(index, 0, newItem);
+        }
+        return newArr;
+      });
       ToastAndroid.show(
         language == "en" ? "Record added successfully" : "تمت إضافة السجل",
         ToastAndroid.SHORT
@@ -209,6 +217,33 @@ export const RecordsContextProvider = ({ children }) => {
       console.log(error);
     }
   };
+  const manualExport = async () => {
+    try {
+      const userPreferences = await db.getAllAsync(
+        "SELECT * FROM user_preferences"
+      );
+      const records = await db.getAllAsync("SELECT * FROM records");
+      const accounts = await db.getAllAsync("SELECT * FROM accounts");
+
+      const payload = JSON.stringify({
+        userPreferencesTable: JSON.stringify(userPreferences),
+        recordsTable: JSON.stringify(records),
+        accountsTable: JSON.stringify(accounts),
+      });
+      return payload;
+    } catch (error) {
+      console.log(error);
+      ToastAndroid.show(
+        language == "en"
+          ? "Could not create a backup"
+          : "لم يتم إنشاء النسخة الاحتياطية",
+        ToastAndroid.SHORT
+      );
+      throw language == "en"
+        ? "Could not create a backup"
+        : "لم يتم إنشاء النسخة الاحتياطية";
+    }
+  };
   const exportData = async () => {
     try {
       const userPreferences = await db.getAllAsync(
@@ -286,11 +321,25 @@ export const RecordsContextProvider = ({ children }) => {
         : "لم يتم إنشاء النسخة الاحتياطية";
     }
   };
-  const importData = async () => {
-    try {
+  const importData = async (manual = false, data = {}) => {
+    let parsedContent = {};
+    if (manual) {
+      parsedContent = JSON.parse(data);
+      if (Object.keys(parsedContent).length == 0) {
+        ToastAndroid.show(
+          language == "en"
+            ? "File is problematic, please make sure you chose the file provided by the app when you exported the data"
+            : "الملف المختار ليس صالحاً, الرجاء التأكد من لصق نفس البيانات التي تم تزويدك بها عندما قمت باستخراج البيانات",
+          ToastAndroid.LONG
+        );
+        throw language == "en"
+          ? "File is problematic, please make sure you chose the file provided by the app when you exported the data"
+          : "الملف المختار ليس صالحاً, الرجاء التأكد من لصق نفس البيانات التي تم تزويدك بها عندما قمت باستخراج البيانات";
+      }
+    } else {
       const file = await pick({ allowMultiSelection: false, mode: "import" });
       const content = await FileSystem.readFile(file[0].uri, "utf8");
-      const parsedContent = JSON.parse(content);
+      parsedContent = JSON.parse(content);
       if (Object.keys(parsedContent).length == 0) {
         ToastAndroid.show(
           language == "en"
@@ -302,6 +351,8 @@ export const RecordsContextProvider = ({ children }) => {
           ? "File is problematic, please make sure you chose the file provided by the app when you exported the data"
           : "الملف المختار ليس صالحاً, الرجاء التأكد من اختيار الملف الذي تم تزويدك به عندما قمت باستخراج البيانات";
       }
+    }
+    try {
       const importedUserPreferences = JSON.parse(
         parsedContent.userPreferencesTable
       );
@@ -455,6 +506,7 @@ export const RecordsContextProvider = ({ children }) => {
         searchMonth,
         pending,
         calculateSelected,
+        manualExport,
       }}
     >
       {children}

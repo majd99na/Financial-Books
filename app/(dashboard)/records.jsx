@@ -75,8 +75,10 @@ const Records = () => {
 
   if (pending)
     return (
-      <ThemedView>
-        <ActivityIndicator color={"red"} />
+      <ThemedView
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <ActivityIndicator color={"red"} size={40} />
       </ThemedView>
     );
   // if (loading) return;

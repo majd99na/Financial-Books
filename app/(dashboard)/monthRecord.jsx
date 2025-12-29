@@ -180,7 +180,11 @@ const search = () => {
         {language == "en" ? "Search" : "ابحث"}
       </ThemedButton>
       {pending ? (
-        <ActivityIndicator size={20} color={dark ? "lightblue" : "blue"} />
+        <ThemedView
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={50} color={"red"} />
+        </ThemedView>
       ) : (
         <View style={styles.container}>
           {list.length > 0 && (

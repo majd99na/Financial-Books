@@ -21,7 +21,7 @@ export const UserPreferencesContextProvider = ({ children }) => {
         if (result.length > 0)
           result.map((result) => {
             if (result.preference == "dark")
-              setDark(result?.value == "1" ? true : false);
+              setDark(result?.value == "true" ? true : false);
             if (result.preference == "account")
               setDefaultAccount(result?.value);
             if (result.preference == "language") setLanguage(result?.value);
